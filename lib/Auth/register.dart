@@ -1,9 +1,18 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mafiaeducation/Auth/login.dart';
 import 'package:mafiaeducation/bottombar.dart';
+import 'package:mafiaeducation/controllers/authcontrollers.dart';
+import 'package:mafiaeducation/controllers/registerationcontroller.dart';
+
 import 'package:mafiaeducation/homeScreen/welcome.dart';
+import 'package:mafiaeducation/utils/endpoints.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -13,6 +22,36 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  Future<void> registerWithEmail() async {
+    try {
+      var headers = {'Content-Type': 'application/json'};
+      var url = Uri.parse(
+          ApiEndPoints.baseUrl + ApiEndPoints.authEndpoints.registerEmail);
+      Map body = {
+        'name': nameController.text,
+        'email': emailController.text.trim(),
+        'password': passwordController.text
+      };
+
+      http.Response response =
+          await http.post(url, body: jsonEncode(body), headers: headers);
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        log('message');
+        final SharedPreferences? prefs = await _prefs;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   bool _obscureText = true;
   bool? isCheck = false;
 
@@ -64,6 +103,7 @@ class _RegisterState extends State<Register> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
                     TextField(
+                        controller: nameController,
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
                                 color: Colors.black,
@@ -95,6 +135,7 @@ class _RegisterState extends State<Register> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
                     TextField(
+                        controller: emailController,
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
                                 color: Colors.black,
@@ -126,6 +167,7 @@ class _RegisterState extends State<Register> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextField(
+                        controller: passwordController,
                         obscureText: _obscureText,
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
@@ -203,8 +245,11 @@ class _RegisterState extends State<Register> {
                     ),
                     SizedBox(height: 30),
                     ElevatedButton(
-                        onPressed:
-                            isCheck == true ? () => Get.to(BottomBar()) : null,
+                        onPressed: isCheck == true
+                            ? () {
+                                this.registerWithEmail();
+                              }
+                            : null,
                         child: Text("Daftar",
                             style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600, fontSize: 18)),

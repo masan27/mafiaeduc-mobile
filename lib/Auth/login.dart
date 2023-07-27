@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mafiaeducation/Auth/register.dart';
 import 'package:mafiaeducation/bottombar.dart';
+import 'package:mafiaeducation/controllers/authcontrollers.dart';
 import 'package:mafiaeducation/homeScreen/homescreen.dart';
 import 'package:mafiaeducation/lupapass/page1.dart';
 
@@ -65,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
                     TextField(
+                        // controller: emailController,
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
                                 color: Colors.black,
@@ -96,6 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextField(
+                        // controller: passwordController,
                         obscureText: _obscureText,
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
@@ -150,7 +153,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 30),
                     ElevatedButton(
-                        onPressed: () => Get.to(BottomBar()),
+                        onPressed: () {},
                         child: Text("Masuk",
                             style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600, fontSize: 18)),
