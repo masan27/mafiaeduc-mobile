@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mafiaeducation/Auth/register.dart';
-import 'package:mafiaeducation/bottombar.dart';
-import 'package:mafiaeducation/controllers/authcontrollers.dart';
-import 'package:mafiaeducation/homeScreen/homescreen.dart';
+// import 'package:mafiaeducation/bottombar.dart';
+import 'package:mafiaeducation/controllers/apiservice.dart';
+// import 'package:mafiaeducation/controllers/authcontrollers.dart';
+// import 'package:mafiaeducation/homeScreen/homescreen.dart';
 import 'package:mafiaeducation/lupapass/page1.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,6 +17,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  ApiService apiservice = ApiService();
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
                     TextField(
-                        // controller: emailController,
+                        controller: emailController,
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
                                 color: Colors.black,
@@ -98,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextField(
-                        // controller: passwordController,
+                        controller: passwordController,
                         obscureText: _obscureText,
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
@@ -153,7 +158,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 30),
                     ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => apiservice.login(
+                            emailController.text, passwordController.text),
                         child: Text("Masuk",
                             style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600, fontSize: 18)),
