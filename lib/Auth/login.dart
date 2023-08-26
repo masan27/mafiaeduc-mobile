@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
 import 'package:mafiaeducation/Auth/register.dart';
 import 'package:mafiaeducation/bottombar.dart';
-import 'package:mafiaeducation/controllers/authcontrollers.dart';
+import 'package:mafiaeducation/controllers/logincontroller.dart';
 import 'package:mafiaeducation/homeScreen/homescreen.dart';
 import 'package:mafiaeducation/lupapass/page1.dart';
 
@@ -15,7 +16,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  LoginController loginController = Get.put(LoginController());
+
   bool _obscureText = true;
+  var isLogin = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
                     TextField(
-                        // controller: emailController,
+                        controller: loginController.emailController,
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
                                 color: Colors.black,
@@ -98,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextField(
-                        // controller: passwordController,
+                        controller: loginController.passwordController,
                         obscureText: _obscureText,
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
@@ -153,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 30),
                     ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => loginController.loginWithEmail(),
                         child: Text("Masuk",
                             style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600, fontSize: 18)),
