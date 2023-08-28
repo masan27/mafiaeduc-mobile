@@ -15,7 +15,6 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -213,17 +212,19 @@ class _RegisterState extends State<Register> {
                     ),
                     SizedBox(height: 30),
                     ElevatedButton(
-                        onPressed: () => AuthController()
-                                .register(
-                              name: nameController.text,
-                              email: emailController.text.trim(),
-                              password: passwordController.text,
-                            )
-                                .then((value) {
-                              nameController.clear();
-                              emailController.clear();
-                              passwordController.clear();
-                            }),
+                        onPressed: isCheck == true
+                            ? () => AuthController()
+                                    .register(
+                                  name: nameController.text,
+                                  email: emailController.text.trim(),
+                                  password: passwordController.text,
+                                )
+                                    .then((value) {
+                                  nameController.clear();
+                                  emailController.clear();
+                                  passwordController.clear();
+                                })
+                            : null,
                         child: Text("Daftar",
                             style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600, fontSize: 18)),

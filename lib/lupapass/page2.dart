@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -15,6 +17,38 @@ class LupaPass2 extends StatefulWidget {
 }
 
 class _LupaPass2State extends State<LupaPass2> {
+  int _start = 59;
+  bool _isLoading = true;
+  String _buttonText = "Kirim ulang";
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  void startTimer() {
+    Timer.periodic(Duration(seconds: 1), (Timer t) {
+      setState(() {
+        if (_start < 1) {
+          _isLoading = false;
+          _buttonText = "Kirim ulang";
+          t.cancel();
+          return;
+        } else {
+          _start = _start - 1;
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,10 +104,48 @@ class _LupaPass2State extends State<LupaPass2> {
                   },
                 ),
                 SizedBox(height: 30),
-                Text("Tunggu 00:59 untuk kirim ulang kode",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.inter(
-                        fontSize: 15, color: Color(0xff9A9A9A))),
+                Center(
+                  child: _isLoading
+                      ? Text(
+                          "Tunggu 00:$_start untuk kirim ulang kode",
+                          style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 15,
+                                  color: Color(0xff8e8e8e),
+                                  fontWeight: FontWeight.w400)),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                              RichText(
+                                  text: TextSpan(children: [
+                                TextSpan(
+                                    text: "Belum mendapatkan kode? ",
+                                    style: GoogleFonts.inter(
+                                        fontSize: 15,
+                                        color: Color(0xff8e8e8e),
+                                        fontWeight: FontWeight.w400)),
+                              ])),
+                              InkWell(
+                                  onTap: () {
+                                    _timer?.cancel();
+                                    setState(() {
+                                      _start = 59;
+                                      _isLoading = true;
+                                      _buttonText = "Kirim ulang";
+                                    });
+                                    startTimer();
+                                  },
+                                  child: Text(_buttonText,
+                                      style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xff0055DF)))),
+                            ]),
+                ),
+                // Text("Tunggu 00:59 untuk kirim ulang kode",
+                //     textAlign: TextAlign.center,
+                //     style: GoogleFonts.inter(
+                //         fontSize: 15, color: Color(0xff9A9A9A))),
               ],
             ),
           ),

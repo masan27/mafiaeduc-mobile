@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mafiaeducation/checkout/waitingpay.dart';
 
 class checkout3 extends StatefulWidget {
@@ -11,6 +14,21 @@ class checkout3 extends StatefulWidget {
 }
 
 class _checkout3State extends State<checkout3> {
+  File? _image;
+  final picker = ImagePicker();
+
+  Future getImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,31 +185,13 @@ class _checkout3State extends State<checkout3> {
                             color: Colors.black,
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
-                    TextField(
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500)),
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.upload),
-                          // fillColor: Color(0xffEEEEEE),
-                          // filled: true,
-                          hintText: "Unggah bukti transfer",
-                          hintStyle: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                  color: Color(0xff9A9A9A))),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 20),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(6),
-                              borderSide: BorderSide(color: Color(0xff9a9a9a))),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(6),
-                              borderSide: BorderSide(color: Color(0xff9a9a9a))),
-                        )),
+                    _image == null
+                        ? Text('No image selected.')
+                        : Image.file(_image!),
+                    ElevatedButton(
+                      onPressed: getImage,
+                      child: Text('Upload Image'),
+                    ),
                   ],
                 ),
               )

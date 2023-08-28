@@ -14,7 +14,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   bool _obscureText = true;
 
   TextEditingController emailController = TextEditingController();
@@ -196,27 +195,27 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-              SizedBox(
-                  height: 1,
-                  child: Container(
-                    color: Color(0xffD1D7DC),
-                  )),
-              SizedBox(height: 30),
-              Center(
-                child: Text("Atau masuk dengan",
-                    style: GoogleFonts.inter(
-                        color: Color(0xff9A9A9A), fontSize: 14)),
-              ),
-              SizedBox(height: 30),
-              InkWell(
-                splashColor: Colors.transparent,
-                onTap: () {},
-                child: Center(
-                    child: Image(
-                  image: AssetImage("images/google.png"),
-                  width: 40,
-                )),
-              ),
+              // SizedBox(
+              //     height: 1,
+              //     child: Container(
+              //       color: Color(0xffD1D7DC),
+              //     )),
+              // SizedBox(height: 30),
+              // Center(
+              //   child: Text("Atau masuk dengan",
+              //       style: GoogleFonts.inter(
+              //           color: Color(0xff9A9A9A), fontSize: 14)),
+              // ),
+              // SizedBox(height: 30),
+              // InkWell(
+              //   splashColor: Colors.transparent,
+              //   onTap: () {},
+              //   child: Center(
+              //       child: Image(
+              //     image: AssetImage("images/google.png"),
+              //     width: 40,
+              //   )),
+              // ),
             ],
           ),
         ),
