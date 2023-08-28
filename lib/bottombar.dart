@@ -19,10 +19,10 @@ class _BottomBarState extends State<BottomBar> {
   int _selectedIndex = 0;
 
   final screen = [
-    HomePage(),
-    Jadwal1(),
-    Materiku1(),
-    AkunPage(),
+    const HomePage(),
+    const Jadwal1(),
+    const Materiku1(),
+    const AkunPage(),
   ];
 
   @override

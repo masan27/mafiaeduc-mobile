@@ -1,17 +1,11 @@
-import 'dart:convert';
-import 'dart:developer';
+// import 'dart:convert';
+// import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mafiaeducation/Auth/login.dart';
-import 'package:mafiaeducation/bottombar.dart';
-import 'package:mafiaeducation/controllers/registerationcontroller.dart';
-
-import 'package:mafiaeducation/homeScreen/welcome.dart';
-import 'package:mafiaeducation/utils/endpoints.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+import 'package:mafiaeducation/controllers/AuthController.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -21,10 +15,11 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  RegisterationController registerationController =
-      Get.put(RegisterationController());
 
-  var isLogin = false.obs;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   bool _obscureText = true;
   bool? isCheck = false;
 
@@ -76,7 +71,7 @@ class _RegisterState extends State<Register> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
                     TextField(
-                        controller: registerationController.nameController,
+                        controller: nameController,
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
                                 color: Colors.black,
@@ -108,7 +103,7 @@ class _RegisterState extends State<Register> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
                     TextField(
-                        controller: registerationController.emailController,
+                        controller: emailController,
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
                                 color: Colors.black,
@@ -140,7 +135,7 @@ class _RegisterState extends State<Register> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextField(
-                        controller: registerationController.passwordController,
+                        controller: passwordController,
                         obscureText: _obscureText,
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
@@ -218,8 +213,17 @@ class _RegisterState extends State<Register> {
                     ),
                     SizedBox(height: 30),
                     ElevatedButton(
-                        onPressed: () =>
-                            registerationController.registerWithEmail(),
+                        onPressed: () => AuthController()
+                                .register(
+                              name: nameController.text,
+                              email: emailController.text.trim(),
+                              password: passwordController.text,
+                            )
+                                .then((value) {
+                              nameController.clear();
+                              emailController.clear();
+                              passwordController.clear();
+                            }),
                         child: Text("Daftar",
                             style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600, fontSize: 18)),

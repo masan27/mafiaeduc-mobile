@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mafiaeducation/controllers/AuthController.dart';
 import 'package:mafiaeducation/profile/akunsaya.dart';
 import 'package:mafiaeducation/profile/lengkapidata.dart';
 
@@ -339,7 +340,7 @@ class _AkunPageState extends State<AkunPage> {
             Padding(
               padding: const EdgeInsets.only(right: 20, left: 20),
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => AuthController().logout(),
                   style: ElevatedButton.styleFrom(
                       shape: StadiumBorder(),
                       minimumSize: Size(double.infinity, 50),

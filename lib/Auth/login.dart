@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart';
 import 'package:mafiaeducation/Auth/register.dart';
-<<<<<<< HEAD
-import 'package:mafiaeducation/bottombar.dart';
-import 'package:mafiaeducation/controllers/logincontroller.dart';
-import 'package:mafiaeducation/homeScreen/homescreen.dart';
-=======
-// import 'package:mafiaeducation/bottombar.dart';
-import 'package:mafiaeducation/controllers/apiservice.dart';
-// import 'package:mafiaeducation/controllers/authcontrollers.dart';
-// import 'package:mafiaeducation/homeScreen/homescreen.dart';
->>>>>>> b5fb69b7310a1fcfcce911d35103103a0c0f1c23
+import 'package:mafiaeducation/controllers/AuthController.dart';
 import 'package:mafiaeducation/lupapass/page1.dart';
+import 'package:mafiaeducation/utils/ApiService.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,10 +14,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  LoginController loginController = Get.put(LoginController());
 
   bool _obscureText = true;
-  var isLogin = false.obs;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -81,11 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
                     TextField(
-<<<<<<< HEAD
-                        controller: loginController.emailController,
-=======
                         controller: emailController,
->>>>>>> b5fb69b7310a1fcfcce911d35103103a0c0f1c23
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
                                 color: Colors.black,
@@ -117,11 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextField(
-<<<<<<< HEAD
-                        controller: loginController.passwordController,
-=======
                         controller: passwordController,
->>>>>>> b5fb69b7310a1fcfcce911d35103103a0c0f1c23
                         obscureText: _obscureText,
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
@@ -176,12 +157,14 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 30),
                     ElevatedButton(
-<<<<<<< HEAD
-                        onPressed: () => loginController.loginWithEmail(),
-=======
-                        onPressed: () => apiservice.login(
-                            emailController.text, passwordController.text),
->>>>>>> b5fb69b7310a1fcfcce911d35103103a0c0f1c23
+                        onPressed: () => AuthController()
+                                .login(
+                                    email: emailController.text.trim(),
+                                    password: passwordController.text)
+                                .then((value) {
+                              emailController.clear();
+                              passwordController.clear();
+                            }),
                         child: Text("Masuk",
                             style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600, fontSize: 18)),
