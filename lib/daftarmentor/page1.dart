@@ -28,17 +28,59 @@ class _Page1MentorState extends State<Page1Mentor> {
     'SMP',
   ];
 
-  File? _image;
+  File? _image1;
+  File? _image2;
+  File? _image3;
+  File? _image4;
   TextEditingController _imageNameController = TextEditingController();
+  TextEditingController _imageKTPController = TextEditingController();
+  TextEditingController _imageIjazahController = TextEditingController();
+  TextEditingController _imageCVController = TextEditingController();
 
-  Future getImage() async {
+  Future getImageprofile() async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedImage != null) {
       setState(() {
-        _image = File(pickedImage.path);
+        _image1 = File(pickedImage.path);
         _imageNameController.text = pickedImage.path.split('/').last;
+      });
+    }
+  }
+
+  Future getImageKTP() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      setState(() {
+        _image2 = File(pickedImage.path);
+        _imageKTPController.text = pickedImage.path.split('/').last;
+      });
+    }
+  }
+
+  Future getImageIjazah() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      setState(() {
+        _image3 = File(pickedImage.path);
+        _imageIjazahController.text = pickedImage.path.split('/').last;
+      });
+    }
+  }
+
+  Future getImageCV() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      setState(() {
+        _image4 = File(pickedImage.path);
+        _imageCVController.text = pickedImage.path.split('/').last;
       });
     }
   }
@@ -46,6 +88,9 @@ class _Page1MentorState extends State<Page1Mentor> {
   @override
   void dispose() {
     _imageNameController.dispose();
+    _imageKTPController.dispose();
+    _imageIjazahController.dispose();
+    _imageCVController.dispose();
     super.dispose();
   }
 
@@ -80,16 +125,16 @@ class _Page1MentorState extends State<Page1Mentor> {
                       height: 100,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: _image == null
+                        child: _image1 == null
                             ? Icon(Icons.add_a_photo,
                                 size: 50, color: Colors.grey)
-                            : Image.file(_image!, fit: BoxFit.cover),
+                            : Image.file(_image1!, fit: BoxFit.cover),
                       ),
                     ),
                     SizedBox(height: 10),
                     InkWell(
                       onTap: () {
-                        getImage();
+                        getImageprofile();
                       },
                       child: Text(
                         "Upload foto",
@@ -206,10 +251,10 @@ class _Page1MentorState extends State<Page1Mentor> {
                           SizedBox(height: 8),
                           TextField(
                               onTap: () {
-                                getImage();
+                                getImageKTP();
                               },
                               readOnly: true,
-                              controller: _imageNameController,
+                              controller: _imageKTPController,
                               style: GoogleFonts.inter(
                                   textStyle: TextStyle(
                                       color: Colors.black,
@@ -250,10 +295,10 @@ class _Page1MentorState extends State<Page1Mentor> {
                           SizedBox(height: 8),
                           TextField(
                               onTap: () {
-                                getImage();
+                                getImageIjazah();
                               },
                               readOnly: true,
-                              controller: _imageNameController,
+                              controller: _imageIjazahController,
                               style: GoogleFonts.inter(
                                   textStyle: TextStyle(
                                       color: Colors.black,
@@ -294,10 +339,10 @@ class _Page1MentorState extends State<Page1Mentor> {
                           SizedBox(height: 8),
                           TextField(
                               onTap: () {
-                                getImage();
+                                getImageCV();
                               },
                               readOnly: true,
-                              controller: _imageNameController,
+                              controller: _imageCVController,
                               style: GoogleFonts.inter(
                                   textStyle: TextStyle(
                                       color: Colors.black,
