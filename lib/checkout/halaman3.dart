@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:mafiaeducation/checkout/waitingpay.dart';
 
 class checkout3 extends StatefulWidget {
@@ -14,6 +15,14 @@ class checkout3 extends StatefulWidget {
 }
 
 class _checkout3State extends State<checkout3> {
+  TextEditingController dateController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    dateController.text = "";
+  }
+
   File? _image;
   final picker = ImagePicker();
 
@@ -93,6 +102,24 @@ class _checkout3State extends State<checkout3> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
                     TextField(
+                        readOnly: true,
+                        onTap: () async {
+                          DateTime? pickedData = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2100));
+                          if (pickedData != null) {
+                            String formattedDate =
+                                DateFormat("dd-MM-yyyy").format(pickedData);
+                            setState(() {
+                              dateController.text = formattedDate.toString();
+                            });
+                          } else {
+                            print("Not selected");
+                          }
+                        },
+                        controller: dateController,
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
                                 color: Colors.black,
@@ -186,11 +213,11 @@ class _checkout3State extends State<checkout3> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
                     _image == null
-                        ? Text('No image selected.')
+                        ? Text('Klik unggah gambar')
                         : Image.file(_image!),
                     ElevatedButton(
                       onPressed: getImage,
-                      child: Text('Upload Image'),
+                      child: Text('Unggah Gambar'),
                     ),
                   ],
                 ),
