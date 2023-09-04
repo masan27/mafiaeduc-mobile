@@ -151,29 +151,43 @@ class _checkout3State extends State<checkout3> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
                     TextField(
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500)),
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                          // fillColor: Color(0xffEEEEEE),
-                          // filled: true,
-                          hintText: "Nominal transfer",
-                          hintStyle: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                  color: Color(0xff9A9A9A))),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 20),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(6),
-                              borderSide: BorderSide(color: Color(0xff9a9a9a))),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(6),
-                              borderSide: BorderSide(color: Color(0xff9a9a9a))),
-                        )),
+                      keyboardType: TextInputType.number,
+                      style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      cursorColor: Colors.black,
+                      decoration: InputDecoration(
+                        // fillColor: Color(0xffEEEEEE),
+                        // filled: true,
+                        hintText: "Masukan nominal transfer",
+                        hintStyle: GoogleFonts.inter(
+                          textStyle: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                            color: Color(0xff9A9A9A),
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 20,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(6),
+                          borderSide: BorderSide(
+                            color: Color(0xff9a9a9a),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(6),
+                          borderSide: BorderSide(
+                            color: Color(0xff9a9a9a),
+                          ),
+                        ),
+                      ),
+                    ),
                     SizedBox(height: 20),
                     Text("Metode pembayaran",
                         style: GoogleFonts.inter(
