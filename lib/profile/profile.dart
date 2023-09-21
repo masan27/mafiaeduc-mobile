@@ -3,8 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mafiaeducation/controllers/AuthController.dart';
+import 'package:mafiaeducation/lupapass/page1.dart';
 import 'package:mafiaeducation/profile/akunsaya.dart';
 import 'package:mafiaeducation/profile/lengkapidata.dart';
+import 'package:mafiaeducation/profile/telepon.dart';
 
 class AkunPage extends StatefulWidget {
   const AkunPage({super.key});
@@ -124,7 +126,7 @@ class _AkunPageState extends State<AkunPage> {
                               "Akun Saya",
                               style: GoogleFonts.inter(
                                   textStyle: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.normal,
                                       color: Colors.black)),
                             ),
@@ -154,7 +156,7 @@ class _AkunPageState extends State<AkunPage> {
                               "Lengkapi Data",
                               style: GoogleFonts.inter(
                                   textStyle: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.normal,
                                       color: Colors.black)),
                             ),
@@ -185,7 +187,7 @@ class _AkunPageState extends State<AkunPage> {
                         "Keamanan",
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black)),
                       )
@@ -193,7 +195,7 @@ class _AkunPageState extends State<AkunPage> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () => Get.to(Telepon()),
                   child: Column(
                     children: [
                       Padding(
@@ -203,40 +205,10 @@ class _AkunPageState extends State<AkunPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Alamat Email",
-                              style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black)),
-                            ),
-                            SvgPicture.asset("images/arrow-right.svg")
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                          height: 1,
-                          child: Container(
-                            color: Color(0xffeeeeee),
-                          )),
-                    ],
-                  ),
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            right: 20, left: 20, top: 20, bottom: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
                               "Nomor Handphone",
                               style: GoogleFonts.inter(
                                   textStyle: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.normal,
                                       color: Colors.black)),
                             ),
@@ -253,7 +225,7 @@ class _AkunPageState extends State<AkunPage> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () => Get.to(LupaPass1()),
                   child: Column(
                     children: [
                       Padding(
@@ -266,7 +238,7 @@ class _AkunPageState extends State<AkunPage> {
                               "Ubah Kata Sandi",
                               style: GoogleFonts.inter(
                                   textStyle: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.normal,
                                       color: Colors.black)),
                             ),
@@ -297,7 +269,7 @@ class _AkunPageState extends State<AkunPage> {
                         "Pusat Bantuan",
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black)),
                       )
@@ -318,7 +290,7 @@ class _AkunPageState extends State<AkunPage> {
                               "Hubungi Kami",
                               style: GoogleFonts.inter(
                                   textStyle: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.normal,
                                       color: Colors.black)),
                             ),
