@@ -5,18 +5,22 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mafiaeducation/Auth/login.dart';
+import 'package:mafiaeducation/controllers/flash_controller.dart';
+import 'package:mafiaeducation/controllers/password_controller.dart';
 import 'package:mafiaeducation/lupapass/page3.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 
 class LupaPass2 extends StatefulWidget {
-  const LupaPass2({super.key});
+  final String slug;
+  const LupaPass2({super.key, required this.slug});
 
   @override
   State<LupaPass2> createState() => _LupaPass2State();
 }
 
 class _LupaPass2State extends State<LupaPass2> {
+  final PasswordController _c = Get.find();
   int _start = 59;
   bool _isLoading = true;
   String _buttonText = "Kirim ulang";
@@ -81,26 +85,26 @@ class _LupaPass2State extends State<LupaPass2> {
                             fontWeight: FontWeight.bold,
                             color: Colors.black))),
                 SizedBox(height: 15),
-                Text("Masukkan 6 digit kode OTP pada email\nBatman@gmail.com",
+                Text("Masukkan 4 digit kode OTP pada email\nBatman@gmail.com",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                         fontSize: 15, color: Color(0xff9A9A9A))),
                 SizedBox(height: 30),
                 OTPTextField(
+                  controller: _c.otpC,
                   outlineBorderRadius: 8,
                   otpFieldStyle: OtpFieldStyle(
                       backgroundColor: Color(0xffeeeeee),
                       focusBorderColor: Color(0xff11578A)),
-                  length: 6,
+                  length: 4,
                   width: double.infinity,
-                  fieldWidth: 50,
+                  fieldWidth: MediaQuery.of(context).size.width / 5,
                   style: TextStyle(fontSize: 20),
                   fieldStyle: FieldStyle.box,
                   onChanged: (pin) {
-                    print("Changed: " + pin);
+                    _c.otpInput.text = pin;
                   },
                   onCompleted: (pin) {
-                    print("complete: $pin");
                   },
                 ),
                 SizedBox(height: 30),
@@ -128,6 +132,9 @@ class _LupaPass2State extends State<LupaPass2> {
                               ])),
                               InkWell(
                                   onTap: () {
+                                    _c.forgotPassword({
+                                      "email": _c.emailInput.text
+                                    }).then((value) {});
                                     _timer?.cancel();
                                     setState(() {
                                       _start = 59;
@@ -161,7 +168,7 @@ class _LupaPass2State extends State<LupaPass2> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     OutlinedButton(
-                      onPressed: () => Get.to(LoginPage()),
+                      onPressed: () => Get.off(LoginPage()),
                       style: OutlinedButton.styleFrom(
                           shape: StadiumBorder(),
                           side: BorderSide(color: Color(0xff8BC523)),
@@ -176,7 +183,26 @@ class _LupaPass2State extends State<LupaPass2> {
                           )),
                     ),
                     ElevatedButton(
-                        onPressed: () => Get.to(LupaPass3()),
+                        onPressed: () {
+                          if (_c.otpInput.text.isEmpty) {
+                            FlashController().flashMessage(
+                                FlashMessageType.warning,
+                                title: 'OTP wajib di isi');
+                          } else {
+                            Get.dialog(
+                                Center(child: CircularProgressIndicator()),
+                                barrierDismissible: false);
+                            _c.verifyOTP({
+                              "email": _c.emailInput.text,
+                              "otp": _c.otpInput.text
+                            }).then((value) {
+                              Get.back();
+                              Get.off(LupaPass3(
+                                slug: widget.slug,
+                              ));
+                            });
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                             shape: StadiumBorder(),
                             minimumSize: Size(160, 60),

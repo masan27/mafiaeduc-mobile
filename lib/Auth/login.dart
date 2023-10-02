@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mafiaeducation/Auth/register.dart';
-import 'package:mafiaeducation/controllers/AuthController.dart';
+import 'package:mafiaeducation/controllers/auth_controller.dart';
+import 'package:mafiaeducation/controllers/flash_controller.dart';
 import 'package:mafiaeducation/lupapass/page1.dart';
-import 'package:mafiaeducation/utils/ApiService.dart';
+import 'package:mafiaeducation/utils/api_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,6 +20,13 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   ApiService apiservice = ApiService();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +153,9 @@ class _LoginPageState extends State<LoginPage> {
                     Align(
                       alignment: Alignment.topRight,
                       child: InkWell(
-                        onTap: () => Get.to(LupaPass1()),
+                        onTap: () => Get.to(LupaPass1(
+                          slug: 'login',
+                        )),
                         child: Text("Lupa password?",
                             style: GoogleFonts.inter(
                                 textStyle: TextStyle(
@@ -156,14 +166,27 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 30),
                     ElevatedButton(
-                        onPressed: () => AuthController()
-                                .login(
-                                    email: emailController.text.trim(),
-                                    password: passwordController.text)
-                                .then((value) {
-                              emailController.clear();
-                              passwordController.clear();
-                            }),
+                        onPressed: () {
+                          Get.dialog(
+                            Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            barrierDismissible: false,
+                          );
+                          AuthController()
+                              .login(
+                                  email: emailController.text.trim(),
+                                  password: passwordController.text)
+                              .then((value) {
+                            emailController.clear();
+                            passwordController.clear();
+                          }).catchError((e) {
+                            Get.back();
+                            FlashController().flashMessage(
+                                FlashMessageType.error,
+                                title: FlashController().setProperError(e.toString()));
+                          });
+                        },
                         child: Text("Masuk",
                             style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600, fontSize: 18)),

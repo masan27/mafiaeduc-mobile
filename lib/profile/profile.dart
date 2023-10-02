@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mafiaeducation/controllers/AuthController.dart';
+import 'package:mafiaeducation/controllers/auth_controller.dart';
+import 'package:mafiaeducation/controllers/contract_controller.dart';
+import 'package:mafiaeducation/controllers/flash_controller.dart';
+import 'package:mafiaeducation/controllers/user_controller.dart';
 import 'package:mafiaeducation/lupapass/page1.dart';
 import 'package:mafiaeducation/profile/akunsaya.dart';
 import 'package:mafiaeducation/profile/lengkapidata.dart';
 import 'package:mafiaeducation/profile/telepon.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AkunPage extends StatefulWidget {
   const AkunPage({super.key});
@@ -16,13 +20,53 @@ class AkunPage extends StatefulWidget {
 }
 
 class _AkunPageState extends State<AkunPage> {
+  final UserController userController = Get.find();
+  final ContactController _contactController = Get.put(ContactController());
+
+  void openURL(String url, String platform) async {
+    try {
+      await launchUrl(Uri.parse(url));
+    } catch (e) {
+      String err;
+      if (platform == 'Lainnya') {
+        err =
+            "Aplikasi untuk stream belum di install, silahkan install terlebih dahulu";
+      } else {
+        err =
+            "Aplikasi $platform belum di install, silahkan install terlebih dahulu";
+      }
+      FlashController().flashMessage(FlashMessageType.info, title: err);
+      print('Error launching because: $e');
+    }
+  }
+
+  String convertToInternationalFormat(String phoneNumber) {
+    // Check if the phone number starts with '0'
+    if (phoneNumber.startsWith('0')) {
+      // Remove the leading '0' and prepend '+62'
+      return '+62${phoneNumber.substring(1)}';
+    }
+    // If it doesn't start with '0', assume it's already in international format
+    return phoneNumber;
+  }
+
+  Future<void> _fetchData() async {
+    await _contactController.getContacts();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: BackButton(color: Colors.black),
+        // leading: BackButton(color: Colors.black),
         title: Text(
           "Profile",
           style: GoogleFonts.inter(
@@ -42,45 +86,48 @@ class _AkunPageState extends State<AkunPage> {
                 padding: const EdgeInsets.all(20),
                 child: Row(
                   children: [
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child:
-                            Image(image: AssetImage("images/matematika.png")),
+                    Visibility(
+                      visible: false,
+                      child: SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child:
+                              Image(image: AssetImage("images/matematika.png")),
+                        ),
                       ),
                     ),
-                    SizedBox(width: 20),
+                    // SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Harley Davidson",
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black)),
-                        ),
+                        Obx(() => Text(
+                              "${userController.user.value.fullName ?? '-'}",
+                              style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black)),
+                            )),
                         SizedBox(height: 5),
-                        Text(
-                          "085928939939",
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                  color: Color(0xff9A9A9A))),
-                        ),
+                        Obx(() => Text(
+                              "${userController.user.value.phone ?? '-'}",
+                              style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff9A9A9A))),
+                            )),
                         SizedBox(height: 5),
-                        Text(
-                          "Harley.davidson@gmail.com",
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black)),
-                        )
+                        Obx(() => Text(
+                              "${userController.user.value.email ?? '-'}",
+                              style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black)),
+                            ))
                       ],
                     )
                   ],
@@ -225,7 +272,7 @@ class _AkunPageState extends State<AkunPage> {
                   ),
                 ),
                 InkWell(
-                  onTap: () => Get.to(LupaPass1()),
+                  onTap: () => Get.to(const LupaPass1(slug: 'profile')),
                   child: Column(
                     children: [
                       Padding(
@@ -277,7 +324,15 @@ class _AkunPageState extends State<AkunPage> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    if (_contactController.list.isEmpty) {
+                      return;
+                    } else {
+                      openURL(
+                          "https://wa.me/${convertToInternationalFormat(_contactController.list[0].phone.toString())}",
+                          "WhatsApp");
+                    }
+                  },
                   child: Column(
                     children: [
                       Padding(

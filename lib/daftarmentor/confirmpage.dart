@@ -52,7 +52,7 @@ class _ConfirmMentorState extends State<ConfirmMentor> {
             child: Column(
               children: [
                 ElevatedButton(
-                    onPressed: () => Get.to(HomePage()),
+                    onPressed: () => Get.offAll(HomePage()),
                     child: Text("Kembali",
                         style: GoogleFonts.inter(
                             fontWeight: FontWeight.w600, fontSize: 18)),

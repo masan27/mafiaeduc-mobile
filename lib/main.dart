@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mafiaeducation/bottombar.dart';
+import 'package:mafiaeducation/controllers/user_controller.dart';
 import 'package:mafiaeducation/homeScreen/welcome.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
-  runApp(const MyApp());
+  initializeDateFormatting('id_ID', null).then((_) {
+    runApp(MyApp());
+  });
 }
 
 // ignore: use_key_in_widget_constructors
@@ -19,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Mafia Education',
       home: CheckAuth(),
       initialRoute: '/',
       // getPages: [
@@ -57,6 +61,9 @@ class _CheckAuthState extends State<CheckAuth> {
       }
     }
   }
+
+  final UserController _userController =
+      Get.put(UserController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {

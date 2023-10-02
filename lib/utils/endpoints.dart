@@ -1,5 +1,5 @@
 class ApiEndPoints {
-  static final String baseUrl = 'http://api-test.mutualproperty.co.id/v1';
+  static final String apiUrl = 'http://api-test.mutualproperty.co.id/v1';
   static _AuthEndPoints authEndpoints = _AuthEndPoints();
 }
 

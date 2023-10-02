@@ -4,7 +4,6 @@ import 'package:mafiaeducation/Auth/login.dart';
 import 'package:get/get.dart';
 import 'package:mafiaeducation/Auth/register.dart';
 import 'package:mafiaeducation/bottombar.dart';
-import 'package:mafiaeducation/homeScreen/homescreen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -45,7 +44,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       fontSize: 14, color: Color(0xff9A9A9A))),
               SizedBox(height: 30),
               ElevatedButton(
-                  onPressed: () => Get.to(BottomBar()),
+                  onPressed: () => Get.off(BottomBar()),
                   child: Text("Eksplore aplikasi",
                       style: GoogleFonts.inter(
                           fontWeight: FontWeight.w600, fontSize: 18)),

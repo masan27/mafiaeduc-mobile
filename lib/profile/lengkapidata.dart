@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'akunsaya.dart';
+import 'package:mafiaeducation/controllers/flash_controller.dart';
+import 'package:mafiaeducation/controllers/grade_controller.dart';
+import 'package:mafiaeducation/controllers/user_controller.dart';
+import 'package:mafiaeducation/models/grade_model.dart';
 
 class LengkapiData extends StatefulWidget {
   const LengkapiData({super.key});
@@ -13,13 +15,36 @@ class LengkapiData extends StatefulWidget {
 }
 
 class _LengkapiDataState extends State<LengkapiData> {
-  String? selectedGrade;
+  final UserController _userController = Get.find();
+  final GradeController _gradeController = Get.put(GradeController());
+  final TextEditingController _originInput = TextEditingController();
+  Grade? selectedGrade;
 
-  List<String> dropdownItems = [
-    'SD',
-    'SMP',
-    'SMA',
-  ];
+  RxString _originText = "-".obs;
+  RxString _gradeText = "-".obs;
+  DateTime? pickedData;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // set text input
+    if (_userController.user.value.schoolOrigin != null) {
+      _originText.value = _userController.user.value.schoolOrigin.toString();
+      _originInput.text = _userController.user.value.schoolOrigin.toString();
+    }
+    if (_userController.user.value.grade != null) {
+      _gradeText.value = _userController.user.value.grade.toString();
+    }
+  }
+
+  @override
+  void dispose() {
+    _originInput.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,6 +145,9 @@ class _LengkapiDataState extends State<LengkapiData> {
                                               ),
                                               SizedBox(height: 8),
                                               TextField(
+                                                  controller: _originInput,
+                                                  onChanged: (value) =>
+                                                      _originText.value = value,
                                                   style: GoogleFonts.inter(
                                                       textStyle: TextStyle(
                                                           color: Colors.black,
@@ -164,7 +192,9 @@ class _LengkapiDataState extends State<LengkapiData> {
                                                   )),
                                               SizedBox(height: 20),
                                               ElevatedButton(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    Get.back();
+                                                  },
                                                   child: Text("Ganti",
                                                       style: GoogleFonts.inter(
                                                           fontWeight:
@@ -202,11 +232,13 @@ class _LengkapiDataState extends State<LengkapiData> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "SMA Methodist 2",
-                              style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 16, color: Colors.black)),
+                            Obx(
+                              () => Text(
+                                _originText.value,
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 16, color: Colors.black)),
+                              ),
                             ),
                             SvgPicture.asset("images/arrow-right.svg")
                           ],
@@ -317,7 +349,7 @@ class _LengkapiDataState extends State<LengkapiData> {
                                                   child:
                                                       DropdownButtonHideUnderline(
                                                     child:
-                                                        DropdownButton<String>(
+                                                        DropdownButton<Grade>(
                                                       value: selectedGrade,
                                                       isExpanded: true,
                                                       hint: Text(
@@ -334,19 +366,28 @@ class _LengkapiDataState extends State<LengkapiData> {
                                                       icon: SvgPicture.asset(
                                                           "images/arrow-down.svg"),
                                                       onChanged:
-                                                          (String? newValue) {
+                                                          (Grade? newValue) {
+                                                        print(newValue);
                                                         setState(() {
                                                           selectedGrade =
-                                                              newValue;
+                                                              newValue!;
+                                                          _gradeText.value =
+                                                              newValue.name
+                                                                  .toString();
                                                         });
                                                       },
-                                                      items: dropdownItems
-                                                          .map((String item) {
+                                                      items: _gradeController
+                                                          .grades
+                                                          .map<
+                                                              DropdownMenuItem<
+                                                                  Grade>>((Grade
+                                                              item) {
                                                         return DropdownMenuItem<
-                                                            String>(
+                                                            Grade>(
                                                           value: item,
                                                           child: Text(
-                                                            item,
+                                                            item.name
+                                                                .toString(),
                                                             style: GoogleFonts.inter(
                                                                 textStyle: TextStyle(
                                                                     fontSize:
@@ -365,7 +406,9 @@ class _LengkapiDataState extends State<LengkapiData> {
                                               ),
                                               SizedBox(height: 20),
                                               ElevatedButton(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    Get.back();
+                                                  },
                                                   child: Text("Ganti",
                                                       style: GoogleFonts.inter(
                                                           fontWeight:
@@ -403,11 +446,13 @@ class _LengkapiDataState extends State<LengkapiData> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "SMA",
-                              style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 16, color: Colors.black)),
+                            Obx(
+                              () => Text(
+                                _gradeText.value,
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 16, color: Colors.black)),
+                              ),
                             ),
                             SvgPicture.asset("images/arrow-right.svg")
                           ],
@@ -425,7 +470,30 @@ class _LengkapiDataState extends State<LengkapiData> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.dialog(
+                      barrierDismissible: false,
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ));
+                  _userController
+                      .updateUser({
+                        "full_name": _userController.user.value.fullName,
+                        "school_origin": _originInput.text,
+                        "grade_id": selectedGrade?.id.toString(),
+                      })
+                      .then((value) => _userController.getUser().then((value) {
+                            Get.back();
+                            FlashController().flashMessage(
+                                FlashMessageType.success,
+                                title: 'Berhasil menyimpan data');
+                          }))
+                      .catchError((e) {
+                        Get.back();
+                        FlashController().flashMessage(FlashMessageType.error,
+                            title:FlashController().setProperError(e.toString()));
+                      });
+                },
                 style: ElevatedButton.styleFrom(
                     shape: StadiumBorder(),
                     minimumSize: Size(160, 50),

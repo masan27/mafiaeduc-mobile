@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Allow cleartext (non-HTTPS) traffic. -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <!-- Trust pre-installed CAs for secure connections -->
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Allow secure (HTTPS) connections to specific domains. -->
+    <domain-config>
+        <domain includeSubdomains="true">mafiaeducation.id</domain>
+        <!-- Add more secure domains as needed -->
+    </domain-config>
+</network-security-config>

@@ -1,0 +1,7 @@
+targets:
+  $default:
+    builders:
+      flutter:
+        options:
+          # Pastikan opsi ini diatur ke true untuk menghasilkan simbol debug
+          track-widget-creation: true

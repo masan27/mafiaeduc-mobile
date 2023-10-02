@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mafiaeducation/Auth/login.dart';
-import 'package:mafiaeducation/controllers/AuthController.dart';
+import 'package:mafiaeducation/controllers/auth_controller.dart';
+import 'package:mafiaeducation/controllers/flash_controller.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -15,12 +16,13 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final AuthController _authController = Get.put(AuthController());
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   bool _obscureText = true;
-  bool? isCheck = false;
+  bool isCheck = false;
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +185,7 @@ class _RegisterState extends State<Register> {
                             checkColor: Colors.white,
                             onChanged: (newValue) {
                               setState(() {
-                                isCheck = newValue;
+                                isCheck = newValue!;
                               });
                             }),
                         Expanded(
@@ -211,29 +213,50 @@ class _RegisterState extends State<Register> {
                       ],
                     ),
                     SizedBox(height: 30),
-                    ElevatedButton(
-                        onPressed: isCheck == true
-                            ? () => AuthController()
-                                    .register(
-                                  name: nameController.text,
-                                  email: emailController.text.trim(),
-                                  password: passwordController.text,
-                                )
-                                    .then((value) {
-                                  nameController.clear();
-                                  emailController.clear();
-                                  passwordController.clear();
-                                })
-                            : null,
-                        child: Text("Daftar",
-                            style: GoogleFonts.inter(
-                                fontWeight: FontWeight.w600, fontSize: 18)),
-                        style: ElevatedButton.styleFrom(
-                            shape: StadiumBorder(),
-                            minimumSize: Size(double.infinity, 55),
-                            elevation: 0,
-                            shadowColor: Colors.white,
-                            backgroundColor: Color(0xff8BC523))),
+                    Obx(
+                      () => ElevatedButton(
+                          onPressed: _authController.isRegist.value &&
+                                  (isCheck &&
+                                      nameController.text != '' &&
+                                      emailController.text != '')
+                              ? () {
+                                  Get.dialog(
+                                      Center(
+                                          child: CircularProgressIndicator()),
+                                      barrierDismissible: false);
+                                  _authController.isRegist.value = false;
+
+                                  _authController
+                                      .register(
+                                    name: nameController.text,
+                                    email: emailController.text.trim(),
+                                    password: passwordController.text,
+                                  )
+                                      .then((value) {
+                                    nameController.clear();
+                                    emailController.clear();
+                                    passwordController.clear();
+                                    _authController.isRegist.value = true;
+                                  }).catchError((e) {
+                                    Get.back(closeOverlays: true);
+                                    _authController.isRegist.value = true;
+                                    FlashController().flashMessage(
+                                        FlashMessageType.error,
+                                        title: FlashController()
+                                            .setProperError(e.toString()));
+                                  });
+                                }
+                              : null,
+                          child: Text("Daftar",
+                              style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.w600, fontSize: 18)),
+                          style: ElevatedButton.styleFrom(
+                              shape: StadiumBorder(),
+                              minimumSize: Size(double.infinity, 55),
+                              elevation: 0,
+                              shadowColor: Colors.white,
+                              backgroundColor: Color(0xff8BC523))),
+                    ),
                     SizedBox(height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

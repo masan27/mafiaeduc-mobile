@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mafiaeducation/controllers/flash_controller.dart';
+import 'package:mafiaeducation/controllers/password_controller.dart';
+import 'package:mafiaeducation/controllers/user_controller.dart';
 import 'package:mafiaeducation/lupapass/page2.dart';
 
 class LupaPass1 extends StatefulWidget {
-  const LupaPass1({super.key});
+  final String slug;
+  const LupaPass1({super.key, required this.slug});
 
   @override
   State<LupaPass1> createState() => _LupaPass1State();
 }
 
 class _LupaPass1State extends State<LupaPass1> {
+  final UserController _userController = Get.find();
+  final PasswordController _c = Get.put(PasswordController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +26,7 @@ class _LupaPass1State extends State<LupaPass1> {
         appBar: AppBar(
           leading: BackButton(color: Colors.black),
           title: Text(
-            "Lupa Password",
+            widget.slug == 'login' ? 'Lupa Password' : "Ubah Kata Sandi",
             style: GoogleFonts.inter(
                 textStyle: TextStyle(
                     fontSize: 20,
@@ -40,6 +47,7 @@ class _LupaPass1State extends State<LupaPass1> {
                     fontWeight: FontWeight.w600)),
             SizedBox(height: 8),
             TextField(
+                controller: _c.emailInput,
                 style: GoogleFonts.inter(
                     textStyle: TextStyle(
                         color: Colors.black, fontWeight: FontWeight.w500)),
@@ -72,7 +80,30 @@ class _LupaPass1State extends State<LupaPass1> {
             child: Column(
               children: [
                 ElevatedButton(
-                    onPressed: () => Get.to(LupaPass2()),
+                    onPressed: () {
+                      if (_c.emailInput.text.isEmpty) {
+                        FlashController().flashMessage(FlashMessageType.warning,
+                            title: 'Email wajib di isi');
+                      } else {
+                        if (widget.slug == 'profile') {
+                          if (_c.emailInput.text !=
+                              _userController.user.value.email) {
+                            FlashController().flashMessage(
+                                FlashMessageType.warning,
+                                title:
+                                    'Email tidak sesuai dengan akun yang digunakan');
+                            return;
+                          }
+                        }
+                        Get.dialog(Center(child: CircularProgressIndicator()),
+                            barrierDismissible: false);
+                        _c.forgotPassword({"email": _c.emailInput.text}).then(
+                            (value) {
+                          Get.back();
+                          Get.to(LupaPass2(slug: widget.slug));
+                        });
+                      }
+                    },
                     child: Text("Lanjutkan",
                         style: GoogleFonts.inter(
                             fontWeight: FontWeight.w600, fontSize: 18)),

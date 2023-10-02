@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mafiaeducation/Auth/login.dart';
+import 'package:mafiaeducation/controllers/flash_controller.dart';
+import 'package:mafiaeducation/controllers/password_controller.dart';
 import 'package:mafiaeducation/lupapass/page4.dart';
 
 class LupaPass3 extends StatefulWidget {
-  const LupaPass3({super.key});
+  final String slug;
+  const LupaPass3({super.key, required this.slug});
 
   @override
   State<LupaPass3> createState() => _LupaPass3State();
 }
 
 class _LupaPass3State extends State<LupaPass3> {
+  final PasswordController _c = Get.find();
   bool _obscureText = true;
   bool _obscureText1 = true;
 
@@ -45,6 +49,7 @@ class _LupaPass3State extends State<LupaPass3> {
                       fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextField(
+                  controller: _c.newPasswordInput,
                   obscureText: _obscureText,
                   style: GoogleFonts.inter(
                       textStyle: TextStyle(
@@ -91,6 +96,7 @@ class _LupaPass3State extends State<LupaPass3> {
                       fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextField(
+                  controller: _c.confirmPasswordInput,
                   obscureText: _obscureText1,
                   style: GoogleFonts.inter(
                       textStyle: TextStyle(
@@ -143,7 +149,7 @@ class _LupaPass3State extends State<LupaPass3> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     OutlinedButton(
-                      onPressed: () => Get.to(LoginPage()),
+                      onPressed: () => Get.off(LoginPage()),
                       style: OutlinedButton.styleFrom(
                           shape: StadiumBorder(),
                           side: BorderSide(color: Color(0xff8BC523)),
@@ -158,7 +164,36 @@ class _LupaPass3State extends State<LupaPass3> {
                           )),
                     ),
                     ElevatedButton(
-                        onPressed: () => Get.to(LupaPass4()),
+                        onPressed: () {
+                          if (_c.newPasswordInput.text.isEmpty &&
+                              _c.confirmPasswordInput.text.isEmpty) {
+                            FlashController().flashMessage(
+                                FlashMessageType.warning,
+                                title:
+                                    'Password baru atau Konfirmasi Password wajib di isi');
+                          } else if (_c.newPasswordInput.text !=
+                              _c.confirmPasswordInput.text) {
+                            FlashController().flashMessage(
+                                FlashMessageType.warning,
+                                title: 'Konfirmasi password tidak sama');
+                          } else {
+                            Get.dialog(
+                                Center(child: CircularProgressIndicator()),
+                                barrierDismissible: false);
+                            _c.resetPassword({
+                              "email": _c.emailInput.text,
+                              "otp": _c.otpInput.text,
+                              "password": _c.newPasswordInput.text,
+                              "password_confirmation":
+                                  _c.confirmPasswordInput.text
+                            }).then((value) {
+                              Get.back();
+                              Get.off(LupaPass4(
+                                slug: widget.slug,
+                              ));
+                            });
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                             shape: StadiumBorder(),
                             minimumSize: Size(160, 60),

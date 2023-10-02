@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mafiaeducation/controllers/flash_controller.dart';
+import 'package:mafiaeducation/controllers/user_controller.dart';
 
 class Telepon extends StatefulWidget {
   const Telepon({super.key});
@@ -11,6 +14,25 @@ class Telepon extends StatefulWidget {
 }
 
 class _TeleponState extends State<Telepon> {
+  final UserController _userController = Get.find();
+  final TextEditingController _phoneInput = TextEditingController();
+  final RxString _phoneText = "-".obs;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (_userController.user.value.phone != null)
+      _phoneText.value = _userController.user.value.phone.toString();
+  }
+
+  @override
+  void dispose() {
+    _phoneInput.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,6 +134,9 @@ class _TeleponState extends State<Telepon> {
                                               ),
                                               SizedBox(height: 8),
                                               TextField(
+                                                  controller: _phoneInput,
+                                                  onChanged: (value) =>
+                                                      _phoneText.value = value,
                                                   keyboardType:
                                                       TextInputType.number,
                                                   style: GoogleFonts.inter(
@@ -158,7 +183,9 @@ class _TeleponState extends State<Telepon> {
                                                   )),
                                               SizedBox(height: 20),
                                               ElevatedButton(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    Get.back();
+                                                  },
                                                   child: Text("Ganti",
                                                       style: GoogleFonts.inter(
                                                           fontWeight:
@@ -196,11 +223,13 @@ class _TeleponState extends State<Telepon> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "082328474823",
-                              style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 16, color: Colors.black)),
+                            Obx(
+                              () => Text(
+                                _phoneText.value,
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 16, color: Colors.black)),
+                              ),
                             ),
                             SvgPicture.asset("images/arrow-right.svg")
                           ],
@@ -218,7 +247,29 @@ class _TeleponState extends State<Telepon> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.dialog(
+                      barrierDismissible: false,
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ));
+                  _userController
+                      .updateUser({
+                        "full_name": _userController.user.value.fullName,
+                        "phone": _phoneInput.text,
+                      })
+                      .then((value) => _userController.getUser().then((value) {
+                            Get.back();
+                            FlashController().flashMessage(
+                                FlashMessageType.success,
+                                title: 'Berhasil menyimpan data');
+                          }))
+                      .catchError((e) {
+                        Get.back();
+                        FlashController().flashMessage(FlashMessageType.error,
+                            title:FlashController().setProperError(e.toString()));
+                      });
+                },
                 style: ElevatedButton.styleFrom(
                     shape: StadiumBorder(),
                     minimumSize: Size(160, 50),

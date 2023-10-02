@@ -3,15 +3,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mafiaeducation/Auth/login.dart';
+import 'package:mafiaeducation/controllers/password_controller.dart';
+import 'package:mafiaeducation/profile/profile.dart';
 
 class LupaPass4 extends StatefulWidget {
-  const LupaPass4({super.key});
+  final String slug;
+  const LupaPass4({super.key, required this.slug});
 
   @override
   State<LupaPass4> createState() => _LupaPass4State();
 }
 
 class _LupaPass4State extends State<LupaPass4> {
+  PasswordController _c = Get.find();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +64,14 @@ class _LupaPass4State extends State<LupaPass4> {
             child: Column(
               children: [
                 ElevatedButton(
-                    onPressed: () => Get.to(LoginPage()),
+                    onPressed: () {
+                      if (widget.slug == 'login') {
+                        Get.to(const LoginPage());
+                      } else {
+                        Get.to(const AkunPage());
+                      }
+                      _c.onClose();
+                    },
                     child: Text("Kembali ke login",
                         style: GoogleFonts.inter(
                             fontWeight: FontWeight.w600, fontSize: 18)),
